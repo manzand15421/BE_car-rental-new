@@ -20,6 +20,12 @@ class BaseController {
         search = undefined
       } = req.query;
 
+      if (!this.filter) {
+        this.filter = {};  // Initialize filter if it does not exist
+      }
+  
+      // Exclude records where isAvailable is false
+      this.filter.isAvailable = true;
 
       if(search) search = this.handleSearch(search)
       if(this.filter){

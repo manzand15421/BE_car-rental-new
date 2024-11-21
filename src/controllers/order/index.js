@@ -53,7 +53,7 @@ class OrderController extends BaseController {
     router.get("/:id", this.getOrderDetail);
     router.get("/:id/invoice", authorize, this.downloadInvoice);
     router.put("/:id/payment", authorize, this.payment);
-    router.put("/:id/cancelOrder", authorize, this.OrderCancel);
+    router.put("/:id/cancelOrder", this.OrderCancel);
     router.put(
       "/:id/updateOrder",
       authorize,
@@ -71,6 +71,7 @@ class OrderController extends BaseController {
     const {id} = req.params
     const order = await this.model.getById(id, {
       select: {
+        id: true,
         order_no: true,
         start_time: true,
         end_time: true,
