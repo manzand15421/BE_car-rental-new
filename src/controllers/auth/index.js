@@ -1,15 +1,18 @@
-const Joi = require("joi");
 const express = require("express");
-
+const Joi = require("joi");
 const BaseController = require("../base");
 const UserModel = require("../../models/user");
 const { checkPassword, encryptPassword } = require("../../helpers/bcrypt");
 const { createToken } = require("../../helpers/jwt");
+const { authorize } = require("../../middlewares/authorization");
 const router = express.Router();
 
 const user = new UserModel();
 
 const signUpSchema = Joi.object({
+  fullname: Joi.string().required().messages({
+    "string.empty": `Form not to be empty`,
+  }),
   email: Joi.string().email().required(),
   password: Joi.string()
     .min(8)
@@ -31,13 +34,15 @@ const signInSchema = Joi.object({
 class AuthController extends BaseController {
   constructor(model) {
     super(model);
-    router.post("/signin", this.validation(signInSchema), this.signIn);
+    router.post("/signin", this.validation(signInSchema),this.signIn);
     router.post("/signup", this.validation(signUpSchema), this.signUp);
+    router.get("/whoami", authorize, this.whoami);
   }
 
   signIn = async (req, res, next) => {
     try {
       const { email, password } = req.body;
+     console.log(req.body)
       const user = await this.model.getOne({ where: { email } });
 
       if (!user) return next(new ValidationError("Invalid email or password"));
@@ -73,17 +78,17 @@ class AuthController extends BaseController {
 
   signUp = async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const { fullname, email, password } = req.body;
       const user = await this.model.getOne({ where: { email } });
 
       if (user) return next(new ValidationError("Email already exist!"));
 
       const newUser = await this.model.set({
+        fullname,
         email,
         password: await encryptPassword(password),
         role_id: 3,
       });
-
       return res.status(200).json(
         this.apiSend({
           code: 200,
@@ -102,7 +107,22 @@ class AuthController extends BaseController {
       next(new ServerError(e));
     }
   };
+
+  whoami = async (req, res, next) => {
+    return res.status(200).json(
+      this.apiSend({
+        code: 200,
+        status: "success",
+        message: "Fetched Profile succesfully",
+        data: {
+          user: req.user,
+        },
+      })
+    );
+  };
 }
+
+
 
 new AuthController(user);
 

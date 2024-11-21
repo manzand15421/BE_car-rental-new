@@ -5,7 +5,7 @@ const CarModel = require('../../models/cars')
 const express = require('express');
 const { authorize, checkRole } = require("../../middlewares/authorization");
 const { memory } = require('../../middlewares/upload');
-var router = express.Router()
+const router = express.Router()
 const rbac = require("../../middlewares/rbac")
 
 const cars = new CarModel();
@@ -30,7 +30,7 @@ class CarsController extends BaseController {
   constructor(model) {
     super(model);
     this.searchField = ['name', 'type', 'manufactur', 'year']
-    router.get("/", this.handleFilter, this.getAll);
+    router.get("/", this.handleFilter,authorize, this.getAll);
     router.post("/", this.validation(carSchema), authorize, rbac('CARS',"create"), this.create);
     router.get("/export", this.export('cars export'));
     router.post("/import", memory.single('file'), this.import);

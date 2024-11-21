@@ -7,13 +7,26 @@ class OrderModel extends BaseModel {
     this.select = {
         id: true,
         order_no: true,
+      
         users:{
+          select : {
           fullname: true
+          }
         },
         cars:{
-          name: true
+          select : {
+          name: true,
+          img : true,
+          }
         },
-        status: true
+        status: true,
+        overdue_time : true,
+        is_driver : true,
+        start_time : true,
+        end_time : true,
+        payment_method: true,
+        total : true,
+        
     };
   }
 }

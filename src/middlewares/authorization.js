@@ -8,8 +8,14 @@ async function authorize(req, res, next) {
         if(!bearerToken) return res.status(401).json({message: 'Unauthorized'});
         const token = bearerToken.split(' ')[1]; // Bearer {token}
         const payload = verifyToken(token);
-        
-        req.user = await user.getById(payload.id)
+
+        req.user = await user.getById(payload.id,{
+            omit: {
+                password : true
+            }
+    })
+    if(!req.user) 
+        return res.status(401).json({message : 'Unauthorized'})
         next();
     } catch(e) {
         console.log(e)

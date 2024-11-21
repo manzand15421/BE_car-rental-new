@@ -13,7 +13,7 @@ function rbac(menuParam, accessParam) {
         grant: {
         path : [accessParam],
         equals : true
-        },
+        },  
         menu : {
           is : {
           name : menuParam,

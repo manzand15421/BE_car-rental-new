@@ -12,4 +12,4 @@ router.use('/auth', auth)
 router.use('/order', order)
 router.use('/upload', upload)
 
-module.exports = router;
+module.exports = router; 

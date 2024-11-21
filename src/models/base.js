@@ -11,7 +11,7 @@ class BaseModel {
   }
 
   get = async ({ where = {}, q = {}, select = this.select }) => {
-    const { sortBy, sort, page, limit } = q;
+    const { sortBy = "createdDt", sort = "desc", page=1, limit=10 } = q;
     const query = {
       select,
       where,
@@ -33,9 +33,10 @@ class BaseModel {
     };
   };
 
-  getById = async (id, select) => {
-    return this.model.findUnique({ where: { id: Number(id) }, select });
+  getById = async (id, option) => {
+    return this.model.findUnique({ where: { id: Number(id) }, ...option });
   };
+
 
   getOne = async (query) => {
     return this.model.findFirst(query);
