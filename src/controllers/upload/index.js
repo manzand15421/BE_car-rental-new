@@ -55,6 +55,7 @@ class UploadController extends BaseController {
     }
   } 
 
+  
   uploadDisk = async(req, res, next) => {
     try{
       const { file } = req;

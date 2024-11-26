@@ -29,8 +29,9 @@ const carSchema = Joi.object({
 class CarsController extends BaseController {
   constructor(model) {
     super(model);
+    this.filter = [{isAvailable:true}]
     this.searchField = ['name', 'type', 'manufactur', 'year']
-    router.get("/", this.handleFilter,authorize, this.getAll);
+    router.get("/", this.handleFilter, this.getAll);
     router.post("/", this.validation(carSchema), authorize, rbac('CARS',"create"), this.create);
     router.get("/export", this.export('cars export'));
     router.post("/import", memory.single('file'), this.import);
@@ -64,6 +65,7 @@ class CarsController extends BaseController {
   handleFilter = (req, res, next) => {
     let filter = []
     console.log(req.query)
+  
     if(req.query.manufactur){
       filter.push({ manufactur: req.query.manufactur })
     }

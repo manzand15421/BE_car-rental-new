@@ -14,6 +14,7 @@ const { PORT = 3000 } = process.env;
 
 // untuk meregistrasi global variable untuk error handling
 require("./src/helpers/errors");
+require("./src/config/firebase")
 
 app.use(cors())
 app.use(express.json());

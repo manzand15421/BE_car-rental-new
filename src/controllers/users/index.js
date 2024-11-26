@@ -26,11 +26,12 @@ const userCreateSchema = Joi.object({
 const userUpdateSchema = Joi.object({
   fullname: Joi.string().required(),
   role: Joi.string().allow(null),
-  address: Joi.string().required(),
+  // address: Joi.string().required(),
   avatar: Joi.string().uri().allow(null),
   gender: Joi.string(),
   driver_license: Joi.string().uri().allow(null),
   birthdate: Joi.date(),
+  phone_number: Joi.string().required(),
 });
 
 class UserController extends BaseController {
@@ -40,6 +41,7 @@ class UserController extends BaseController {
     router.post("/", this.validation(userCreateSchema), authorize, this.checkUnique, this.encrypt,  this.create);
     router.get("/:id", this.get);
     router.put("/:id", this.validation(userUpdateSchema), authorize, checkRole(['admin']), this.update);
+    router.put("/updateUser/:id", this.validation(userUpdateSchema), authorize, this.update);
     router.delete("/:id", this.delete);
   }
 

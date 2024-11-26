@@ -4,6 +4,7 @@ const validation = require("../middlewares/validation");
 const { generateXLSX, readXLSX } = require('../helpers/xlsx');
 const { Prisma } = require("@prisma/client");
 
+
 class BaseController {
   constructor(model) {
     this.model = model;
@@ -23,9 +24,6 @@ class BaseController {
       if (!this.filter) {
         this.filter = {};  // Initialize filter if it does not exist
       }
-  
-      // Exclude records where isAvailable is false
-      this.filter.isAvailable = true;
 
       if(search) search = this.handleSearch(search)
       if(this.filter){

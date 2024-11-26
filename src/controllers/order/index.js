@@ -65,53 +65,51 @@ class OrderController extends BaseController {
     // router.delete("/:id", this.delete);
   }
 
-  getOrderDetail = async (req,res,next) => {
-   
+  getOrderDetail = async (req, res, next) => {
     try {
-    const {id} = req.params
-    const order = await this.model.getById(id, {
-      select: {
-        id: true,
-        order_no: true,
-        start_time: true,
-        end_time: true,
-        is_driver: true,
-        status: true,
-        createdBy: true,
-        updatedBy: true,
-        payment_method: true,
-        overdue_time: true,
-        total : true,
-        cars: {
-          select: {
-            id: true,
-            name: true,
-            img: true,
+      const { id } = req.params;
+      const order = await this.model.getById(id, {
+        select: {
+          id: true,
+          order_no: true,
+          start_time: true,
+          end_time: true,
+          is_driver: true,
+          status: true,
+          createdBy: true,
+          updatedBy: true,
+          payment_method: true,
+          overdue_time: true,
+          total: true,
+          cars: {
+            select: {
+              id: true,
+              name: true,
+              img: true,
+            },
+          },
+          users: {
+            select: {
+              id: true,
+              fullname: true,
+              address: true,
+            },
           },
         },
-        users: {
-          select: {
-            id: true,
-            fullname: true,
-            address: true,
-          },
-        },
-      },
-    });
+      });
 
-
-    return res.status(200).json(
-      this.apiSend({
-        code: 200,
-        status: "success",
-        message: "Order created successfully",
-        data: order,
-      })
-    );
-  } catch (error) {
-    return next(error);
-  }
-  }
+      return res.status(200).json(
+        this.apiSend({
+          code: 200,
+          status: "success",
+          message: "Order created successfully",
+          data: order,
+        })
+      );
+    } catch (error) {
+      return next(error);
+    }
+  };
 
   getMyOrder = async (req, res, next) => {
     try {
@@ -186,17 +184,15 @@ class OrderController extends BaseController {
           users: {
             connect: {
               id: req.user.id,
-             
             },
           },
-         
-        },),
+        }),
         cars.update(req.body.car_id, { isAvailable: false }),
       ]);
 
       const order = await this.model.getById(result.id, {
         select: {
-          id:true,
+          id: true,
           order_no: true,
           start_time: true,
           end_time: true,
@@ -206,7 +202,7 @@ class OrderController extends BaseController {
           updatedBy: true,
           payment_method: true,
           overdue_time: true,
-          total : true,
+          total: true,
           cars: {
             select: {
               id: true,
@@ -223,7 +219,6 @@ class OrderController extends BaseController {
           },
         },
       });
-
 
       return res.status(200).json(
         this.apiSend({
@@ -282,7 +277,7 @@ class OrderController extends BaseController {
         this.apiSend({
           code: 200,
           status: "success",
-          message: "Order Canceled Successfully",
+          message: "Order Canceled",
           data: orderCanceled,
         })
       );
@@ -296,7 +291,6 @@ class OrderController extends BaseController {
     const endTime = new Date(req.body.end_time);
 
     try {
-      
       const order = await this.model.getById(req.params.id);
       if (!order)
         return next(new ValidationError("Order Not Found or is not available"));
@@ -318,18 +312,17 @@ class OrderController extends BaseController {
       console.log(total);
 
       const orderUpdate = await this.model.update(order.id, {
-        
         start_time: startTime,
         end_time: endTime,
         is_driver: req.body.is_driver,
         payment_method: req.body.payment_method,
         overdue_time: new Date(Date.now() + (7 + 24) * 60 * 60 * 1000),
         total,
-      },);
+      });
 
       const orders = await this.model.getById(order.id, {
         select: {
-          id : true,
+          id: true,
           order_no: true,
           start_time: true,
           end_time: true,
@@ -340,7 +333,7 @@ class OrderController extends BaseController {
           updatedBy: true,
           payment_method: true,
           overdue_time: true,
-          total : true,
+          total: true,
           cars: {
             select: {
               id: true,

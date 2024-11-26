@@ -56,9 +56,11 @@ model order {
 
 model users {
   id             Int       @id @default(autoincrement())
+  googleId       String?   @db.VarChar
+  provider       String?   @default("local")
   fullname       String?   @db.VarChar
   email          String    @unique @db.VarChar(30)
-  password       String    @db.VarChar
+  password       String?    @db.VarChar
   address        String?   @db.VarChar
   gender         String?   @db.VarChar
   avatar         String?   @db.VarChar
